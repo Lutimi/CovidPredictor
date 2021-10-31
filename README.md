@@ -1,1 +1,1 @@
-# blockchainlab
+# CovidPredictor

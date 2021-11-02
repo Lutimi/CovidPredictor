@@ -51,7 +51,7 @@ func readCSV() error {
 
 func filterData() ([][]string, error) {
 	// open file
-	csvData, err := os.Open("pm21Septiembre2021.csv")
+	csvData, err := os.Open("pm21Setiembre2021.csv")
 	if err != nil { return nil, err }
 	defer csvData.Close()
 

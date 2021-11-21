@@ -8,7 +8,7 @@ WORKDIR /
 COPY go.mod ./
 RUN go mod download
 
-
+COPY regression_formulas.csv ./
 COPY *.go ./
 
 RUN go build -o /mlprediction

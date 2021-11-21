@@ -3,43 +3,51 @@ package main
 import (
 	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
+
 	"github.com/sajari/regression"
 )
 
 // Definir arrays por cada region
 var regions = []string{} // Contiene todas las regiones
 var dataPerRegion = [][]string{} //Contiene los datos de contagios por fecha separado por region
-
+var formulas = [][]string{}
 // Generar dataset de entrenamiento y dataset de test
 func main() {
 
 	// Obtener todos los datos del dataset
-	covidData := getCovidDataFromCSV()
-	
+	//covidData := getCovidDataFromCSV()
+	uri := "https://media.githubusercontent.com/media/Gonzarod/dataset/master/pm21Septiembre2021.csv"
+	//uri := "https://raw.githubusercontent.com/Lutimi/dataset/master/pm21Septiembre2021.csv"
+	covidData,_ := readCSVFromUrl(uri)	
 	// filtramos y agrupamos por dia y region la data 
 	filterData, _ := filterData(covidData)
 
 	// Se asigna valor a dataPerRegion
 	makeDataSetPerRegion(filterData)
 	
-	regionData := getDatasetRegion(3)
+	//regionData := getDatasetRegion(3)
 
 	for _, region := range regions { 
 		fmt.Printf("Training for %s ----------\n",region)
 		n := getIndexOfRegion(region)
 		dataSetRegion := getDatasetRegion(n)
-		trainModel(dataSetRegion)
+		trainModel(dataSetRegion,region)
 	}
 
-    fmt.Println(regionData);
+    //fmt.Println(regionData);
+
+	//---write formulas
+	writeFormulas();
 
 }
 
 func getCovidDataFromCSV() ([][] string){
-	dataset, err := os.Open("dataset.csv")
+	dataset, err := os.Open("datosabiertos_dataset.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,7 +56,6 @@ func getCovidDataFromCSV() ([][] string){
 	// Crear csvReader y establecer numero de columnas
 	covidDataReader := csv.NewReader(dataset)
 	covidDataReader.Comma = '|'
-	covidDataReader.FieldsPerRecord = 15
 
 	// Lee todos los registros
 	records, err := covidDataReader.ReadAll()
@@ -192,7 +199,7 @@ func getIndexOfRegion(value string) int {
     return -1
 }
 
-func trainModel(records [][]string){
+func trainModel(records [][]string,region string){
 	
 	var r regression.Regression
 	r.SetObserved("CovidCases")
@@ -227,7 +234,72 @@ func trainModel(records [][]string){
 	
 	fmt.Printf("\nRegression Formula:\n%v\n\n", r.Formula)
 	fmt.Println(r.GetCoeffs())
-	
+	if len(r.GetCoeffs())>0 {
+		coef := r.GetCoeffs()
+		b := fmt.Sprintf("%f",coef[0])
+		m := fmt.Sprintf("%f",coef[1])
+		formulaRegion := []string{}
+		formulaRegion = append(formulaRegion,region)
+		formulaRegion = append(formulaRegion, b)
+		formulaRegion = append(formulaRegion, m)
+		formulas = append(formulas, formulaRegion)	
+	}
 }
 
-calculatePrediction()
+func readCSVFromUrl(url string) ([][]string, error) {
+
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	reader := csv.NewReader(resp.Body)
+	reader.Comma = '|'
+	reader.FieldsPerRecord = 15
+	data := [][]string{}
+
+	for {
+        rec, err := reader.Read()
+        if err == io.EOF {
+            break
+        }
+        if err != nil {
+            //log.Fatal(err)
+        } else {
+			data = append(data, rec)
+		}
+	}
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+
+
+	fmt.Print(data[0])
+	fmt.Print(data[1])
+
+	return data, nil
+}
+
+func writeFormulas() {
+
+	csvFile, err := os.Create("regressionFormulas.csv")
+
+	if err != nil {
+		log.Fatalf("failed creating file: %s", err)
+	}
+
+	csvwriter := csv.NewWriter(csvFile)
+	
+	for _, r := range formulas {
+		if len(r) > 0 {
+			_ = csvwriter.Write(r)
+		}
+	}
+
+	csvwriter.Flush()
+	csvFile.Close()
+
+}

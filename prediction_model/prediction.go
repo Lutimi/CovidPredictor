@@ -292,7 +292,7 @@ func readCSVFromUrl(url string) ([][]string, error) {
 
 func writeFormulas() {
 
-	csvFile, err := os.Create("regressionFormulas.csv")
+	csvFile, err := os.Create("regression_formulas.csv")
 
 	if err != nil {
 		log.Fatalf("failed creating file: %s", err)

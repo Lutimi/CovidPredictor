@@ -8,34 +8,41 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-
 	"github.com/sajari/regression"
 )
 
 // Definir arrays por cada region
-var regions = []string{} // Contiene todas las regiones
+var regions = []string{"AMAZONAS","ANCASH","APURIMAC","AREQUIPA","AYACUCHO","CAJAMARCA","CUSCO","HUANCAVELICA","HUANUCO","ICA","JUNIN","LA LIBERTAD","LAMBAYEQUE","LIMA","LORETO","MADRE DE DIOS","MOQUEGUA","PASCO","PIURA","PUNO","SAN MARTIN","TACNA","TUMBES","UCAYALI"} // Contiene todas las regiones
 var dataPerRegion = [][]string{} //Contiene los datos de contagios por fecha separado por region
 var formulas = [][]string{}
 // Generar dataset de entrenamiento y dataset de test
 func main() {
 
 	// Obtener todos los datos del dataset
-	//covidData := getCovidDataFromCSV()
-	uri := "https://media.githubusercontent.com/media/Gonzarod/dataset/master/pm21Septiembre2021.csv"
+	
+	//uri := "https://media.githubusercontent.com/media/Gonzarod/dataset/master/pm21Septiembre2021.csv"
 	//uri := "https://raw.githubusercontent.com/Lutimi/dataset/master/pm21Septiembre2021.csv"
-	covidData,_ := readCSVFromUrl(uri)	
+	//covidData,_ := readCSVFromUrl(uri)	
+	covidData := getCovidDataFromCSV()
 	// filtramos y agrupamos por dia y region la data 
-	filterData, _ := filterData(covidData)
+	//filterData, _ := filterData(covidData)
 
 	// Se asigna valor a dataPerRegion
-	makeDataSetPerRegion(filterData)
+	//makeDataSetPerRegion(filterData)
+	makeDataSetPerRegion(covidData)
 	
 	//regionData := getDatasetRegion(3)
+	//fmt.Print(dataPerRegion)
+
+	setDataSetPerRegion(covidData)
+
+	
 
 	for _, region := range regions { 
 		fmt.Printf("Training for %s ----------\n",region)
 		n := getIndexOfRegion(region)
 		dataSetRegion := getDatasetRegion(n)
+		fmt.Printf("Size: %d\n",len(dataSetRegion))
 		trainModel(dataSetRegion,region)
 	}
 
@@ -47,7 +54,7 @@ func main() {
 }
 
 func getCovidDataFromCSV() ([][] string){
-	dataset, err := os.Open("datosabiertos_dataset.csv")
+	dataset, err := os.Open("clean_dataset.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -55,7 +62,7 @@ func getCovidDataFromCSV() ([][] string){
 
 	// Crear csvReader y establecer numero de columnas
 	covidDataReader := csv.NewReader(dataset)
-	covidDataReader.Comma = '|'
+	covidDataReader.Comma = ';'
 
 	// Lee todos los registros
 	records, err := covidDataReader.ReadAll()
@@ -302,4 +309,18 @@ func writeFormulas() {
 	csvwriter.Flush()
 	csvFile.Close()
 
+}
+
+func setDataSetPerRegion(data [][]string){
+	datsetRegion := []string{}
+	
+	for dx := range regions {
+		for _, training := range data {
+			if regions[dx] == training[1] { 
+				datsetRegion = append(datsetRegion, training...) 
+			} else if regions[dx] != training[1] { continue }
+		}
+		dataPerRegion = append(dataPerRegion, datsetRegion)
+		datsetRegion = nil
+	}
 }

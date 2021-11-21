@@ -60,6 +60,8 @@ func main() {
 
 func getDatasetRegion(position int) ([][] string) {
 	regionData := [][]string{}
+	headers := []string{"Date", "Region", "CovidCases"}
+	regionData = append(regionData, headers)
 	join := []string{}
 	for x := range model[position] {
 		if x == len(model[position]) - 3 { break }

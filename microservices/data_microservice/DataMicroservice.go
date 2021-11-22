@@ -42,11 +42,12 @@ func main() {
 }
 
 func save_prediction(response http.ResponseWriter, request *http.Request) {
-	response.Header().Set("Content-Type", "application/json")
-	response.Header().Set("Access-Control-Allow-Origin", "*")
-	response.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
+	//response.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
 	
 	if request.Method == "POST" {
+		response.Header().Set("Content-Type", "application/json")
+		response.Header().Set("Access-Control-Allow-Origin", "*")
+	
 		if request.Header.Get("Content-Type") == "application/json" {
 			jsonBytes, err := ioutil.ReadAll(request.Body)
 			if err != nil {
@@ -72,6 +73,17 @@ func save_prediction(response http.ResponseWriter, request *http.Request) {
 				`)
 			}
 		}
+	} else if request.Method == "OPTIONS" {
+		//response.Header().Set("Content-Type", "application/json")
+		//: 
+		//Access-Control-Request-Method: POST	
+		response.Header().Set("Access-Control-Allow-Headers","content-type")
+		response.Header().Set("Access-Control-Allow-Origin", "*")
+		response.Header().Set("Access-Control-Allow-Methods", "POST")
+		//response.Header().Set("Access-Control-Request-Headers", "content-type")
+		//response.Header().Del("Content-Type")
+		//response.Header().Set("Access-Control-Allow-Origin", "*")
+		//io.WriteString(response, "Wait")
 	} else {
 		http.Error(response, "invalid method", http.StatusMethodNotAllowed)
 	}

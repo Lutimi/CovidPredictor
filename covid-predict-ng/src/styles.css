@@ -1,4 +1,183 @@
 /* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+* {
+    padding: 0;
+    margin: 0;
+    font-family: 'Oswald', sans-serif;
+}
+
+section {
+    width: 100%;
+    height: 100vh;
+}
+
+.head {
+    width: 100%;
+    height: 17vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    width: 17vh;
+    height: 100%;
+    border-radius: 100%;
+}
+
+.body {
+    width: 100%;
+    height: calc(100% - 17vh);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.body .statis {
+    height: 100%;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-end;
+}
+
+.statis .intro {
+    width: 80%;
+    height: 20%;
+}
+
+.intro h2 {
+    font-size: 3.2vh;
+    color: #053742;
+}
+
+.intro p {
+    font-size: 1.8vh;
+    text-align: justify;
+}
+
+.statis .graph {
+    width: 80%;
+    height: 80%;
+}
+
+iframe {
+    margin-top: 20px;
+}
+
+.body .prediction {
+    width: 60%;
+    height: 7vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 45px;
+}
+
+.prediction h2 {
+    font-size: 3.2vh;
+    color: #053742;
+}
+
+.prediction input {
+    width: 14vh;
+    height: 4vh;
+    font-size: 2vh;
+    margin-left: 18px;
+    text-align: center;
+    border-radius: 12px;
+    background: #ff801a;
+    outline: none;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.body .table {
+    height: 100%;
+    width: 40%;
+}
+
+.table .dataset {
+    width: 60%;
+    overflow: hidden;
+    margin-left: 45px;
+    border-radius: 15px;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+}
+
+table {
+    width: 100%;
+}
+
+.mat-header-cell {
+    font-size: 1.8vh;
+    color: #ff801a;
+    font-weight: bold;
+    background-color: #053742;
+}
+  
+.mat-cell {
+    font-size: 1.7vh;
+    text-transform: lowercase;
+}
+
+.mat-cell:first-letter {
+    text-transform: capitalize;
+}
+
+.table .switch {
+    width: 60%;
+    height: 12vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 45px;
+}
+
+.switch .button {
+    width: 30vh;
+    height: 4.5vh;
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.25);
+    border-width: 0.25px;
+    border-radius: 20px;
+}
+
+.button .option-left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button .option-right {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.option-left h2,
+.option-right h2 {
+    font-size: 2vh;
+}
+
+.enabled {
+    background-color: #ff801a;
+    color: black;
+}
+
+.disabled {
+    background-color: white;
+    color: #DADADA;
+}

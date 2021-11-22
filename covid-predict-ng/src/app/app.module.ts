@@ -8,10 +8,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { MatSortModule } from '@angular/material/sort';
+import { PredictionComponent } from './views/prediction/prediction.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PredictionComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +24,8 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     ReactiveFormsModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule
   ],
   providers: [],
   bootstrap: [AppComponent]

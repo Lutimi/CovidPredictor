@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CovidPredictorService } from './services/covid-predictor.service';
 import { CovidPrediction } from './interfaces/covid-prediction';
 
@@ -10,11 +10,14 @@ import { CovidPrediction } from './interfaces/covid-prediction';
 export class AppComponent implements OnInit {
 
   covidPredicts: CovidPrediction[] = [];
+  displayItems: string[] = ["region", "nCases", "date"];
 
   constructor(private covidPredictionService: CovidPredictorService) {}
 
   ngOnInit(): void {
     this.viewAllPredictis();
+    // this.covidPredicts.sort = this.sort;
+    // this.covidPredicts.paginator = this.paginator;
   }
 
   viewAllPredictis() {
@@ -29,4 +32,13 @@ export class AppComponent implements OnInit {
   }
 
   title = 'covid-predict-ng';
+
+  convertDate(dateName: string) {
+    var year = dateName.substr(0, 4)
+    var month = dateName.substr(4, 2)
+    var day = dateName.substr(6, 2)
+
+    var newDate = new Date(year + "-" + month + "-" + day)
+    return newDate.toLocaleDateString("es-PE")
+  }
 }

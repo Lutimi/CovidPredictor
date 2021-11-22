@@ -1,0 +1,66 @@
+<section>
+    <div class="head">
+      <img class="logo" src="assets/covid-logo.png" alt="">
+    </div>
+    <div class="body">
+      <div class="statis">
+        <div class="intro">
+          <h2>La crisis del coronavirus en Perú</h2>
+          <p>A través de varias pestañas, este mapa interactivo permite medir el avance de la pandemia a lo largo del territorio 
+            nacional, tanto de manera provincial como regional. Los dos principales indicadores que se han tomado en cuenta son 
+            los casos confirmados y las muertes por COVID-19. Para medir el porcentaje de infección y mortalidad en relación a la 
+            población de cada zona, se usan datos estimados del Instituto Nacional de Estadística e Informática (INEI) a junio de 
+            2020.</p>
+        </div>
+        <div class="graph">
+            <iframe title="" aria-label="Interactive area chart" id="datawrapper-chart-9lJ8E" src="https://datawrapper.dwcdn.net/9lJ8E/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="400"></iframe>
+            <script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(e){if(void 0!==e.data["datawrapper-height"]){var t=document.querySelectorAll("iframe");for(var a in e.data["datawrapper-height"])for(var r=0;r<t.length;r++){if(t[r].contentWindow===e.source)t[r].style.height=e.data["datawrapper-height"][a]+"px"}}}))}();
+            </script>
+        </div>
+      </div>
+     <div class="table">
+       <div class="prediction">
+           <h2>Genera una predición: </h2>
+           <input type="submit" value="Generar" name="">
+       </div>
+       <div class="dataset">
+        <table mat-table [dataSource]="covidPredicts" class="style">
+            <!-- Region Column -->
+            <ng-container matColumnDef="region">
+                <th mat-header-cell *matHeaderCellDef> Región </th>
+                <td mat-cell *matCellDef="let element"> {{element.region}} </td>
+            </ng-container>
+        
+             <!-- N° Cases Column -->
+            <ng-container matColumnDef="nCases">
+                <th mat-header-cell *matHeaderCellDef> Positivos </th>
+                <td mat-cell *matCellDef="let element"> {{element.nCases}} </td>
+            </ng-container>
+  
+            <!-- Date Column -->
+            <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{convertDate(element.date)}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayItems"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayItems;"></tr>
+        </table>
+        <mat-paginator [pageSizeOptions]="[10]"
+                 showFirstLastButtons 
+                 aria-label="Select page of periodic elements">
+        </mat-paginator>
+       </div>
+       <div class="switch">
+        <div class="button">
+          <div class="option-left disabled" id="disabled">
+            <h2>Dataset</h2>
+          </div>
+          <div class="option-right enabled" id="enabled">
+            <h2>Historial</h2>
+          </div>
+        </div>
+       </div>
+     </div>
+    </div>
+  </section>

@@ -33,9 +33,7 @@ func init_mock_data() Data {
 
 func make_prediction(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
-	response.Header().Set("Access-Control-Allow-Headers","Content-Type,access-control-allow-origin, access-control-allow-headers")
 	response.Header().Set("Access-Control-Allow-Origin", "*")
-	response.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 
 	region_param := request.URL.Query().Get("region")
 	if region_param == "" {

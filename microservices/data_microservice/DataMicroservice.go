@@ -62,6 +62,7 @@ func save_prediction(response http.ResponseWriter, request *http.Request) {
 
 				//send success msg
 				response.Header().Set("Content-Type", "application/json")
+				response.Header().Set("Access-Control-Allow-Origin", "*")
 				io.WriteString(response, `
 					{
 						"message":"Operation Successful"
@@ -77,6 +78,7 @@ func save_prediction(response http.ResponseWriter, request *http.Request) {
 //GET
 func list_predictions(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Access-Control-Allow-Origin", "*")
 
 	//read the data from csv
 	predictions := read_data_from_csv(filename)

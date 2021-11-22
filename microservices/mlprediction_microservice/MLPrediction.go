@@ -1,23 +1,35 @@
 package main
 
 import (
+	"bufio"
+	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
-	"strings"
-	"encoding/csv"
 	"os"
-	"fmt"
 	"strconv"
+	"strings"
 )
 
 var formulas [][]string
+var NodesSwitch bool = false
+var chanData chan Data
+
+var direccion string = "localhost:9066"
+var direccionNode string = "localhost:9101"
 
 type Data struct {
 	Region string `json:"region"`
 	Date   string `json:"date"`
 	NCases int    `json:"nCases"`
+}
+
+type PredictionRequest struct {
+	Region string `json:"region"`
+	Date   string `json:"date"`
 }
 
 func handleRequest() {
@@ -50,7 +62,15 @@ func make_prediction(response http.ResponseWriter, request *http.Request) {
 	//get data from prediction
 	//pass region param and date param
 	//prediction := init_mock_data()
-	prediction := calculatePrediction(region_param,date_param)
+	var prediction Data
+	if NodesSwitch == true {
+		enviar(direccionNode,PredictionRequest{region_param,date_param})
+		predictionChan := <- chanData;
+		prediction = predictionChan
+	} else {
+		prediction = calculatePrediction(region_param,date_param)
+	}
+	
 
 	jsonBytes, _ := json.MarshalIndent(prediction, "", " ")
 	io.WriteString(response, string(jsonBytes))
@@ -98,7 +118,46 @@ func loadFormulas(){
 	fmt.Println(formulas)
 }
 
+
+func listenToNode() {
+	ln, _ := net.Listen("tcp",direccion)
+
+	defer ln.Close()
+
+	for {
+		con, _ := ln.Accept()
+		go manejadorConeXion(con)
+	}
+}
+
+func manejadorConeXion(con net.Conn)  {
+
+	defer con.Close()
+	fmt.Println("Recibo de nodo")
+	bufferIn := bufio.NewReader(con)
+	bytesInfo, _ := bufferIn.ReadString('\n')
+
+	var data Data 
+	json.Unmarshal([]byte(bytesInfo),&data)
+	fmt.Println(data)
+	chanData <- data
+	//Commentar para prueba local:
+	
+
+}
+func enviar(direccion string, info PredictionRequest){
+	con,_ := net.Dial("tcp",direccion)
+	defer con.Close()
+	fmt.Println(info)
+	jsonByte,_ := json.Marshal(info)
+	fmt.Fprintln(con,string(jsonByte))
+}
+
+
+
 func main() {
+	chanData=make(chan Data)
+	go listenToNode();
 	loadFormulas();
 	handleRequest()
 }

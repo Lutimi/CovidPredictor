@@ -77,6 +77,8 @@ export class PredictionComponent implements OnInit {
       error: (err) => console.log(err),
       next: (rest) => {
         console.log('Successfull Save Predict')
+        this.dialogRef.close();
+        window.location.href = '/covidPredict'
       },
       complete: () => console.log('Complete')
     });

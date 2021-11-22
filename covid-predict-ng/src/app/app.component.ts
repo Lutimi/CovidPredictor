@@ -1,10 +1,32 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CovidPredictorService } from './services/covid-predictor.service';
+import { CovidPrediction } from './interfaces/covid-prediction';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  covidPredicts: CovidPrediction[] = [];
+
+  constructor(private covidPredictionService: CovidPredictorService) {}
+
+  ngOnInit(): void {
+    this.viewAllPredictis();
+  }
+
+  viewAllPredictis() {
+    this.covidPredictionService.listPredictions().subscribe({
+      error: (err) => console.log(err),
+        next: (rest) => {
+          this.covidPredicts = rest;
+          console.log(this.covidPredicts);
+        },
+        complete: () => console.log('Complete')
+    })
+  }
+
   title = 'covid-predict-ng';
 }

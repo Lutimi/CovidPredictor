@@ -42,6 +42,10 @@ func main() {
 }
 
 func save_prediction(response http.ResponseWriter, request *http.Request) {
+	response.Header().Set("Content-Type", "application/json")
+	response.Header().Set("Access-Control-Allow-Origin", "*")
+	response.Header().Set("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
+	
 	if request.Method == "POST" {
 		if request.Header.Get("Content-Type") == "application/json" {
 			jsonBytes, err := ioutil.ReadAll(request.Body)
@@ -61,8 +65,6 @@ func save_prediction(response http.ResponseWriter, request *http.Request) {
 				defer outputFile.Close()
 
 				//send success msg
-				response.Header().Set("Content-Type", "application/json")
-				response.Header().Set("Access-Control-Allow-Origin", "*")
 				io.WriteString(response, `
 					{
 						"message":"Operation Successful"

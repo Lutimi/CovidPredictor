@@ -1,1 +1,30 @@
-<p>prediction works!</p>
+<section>
+    <div class="header">
+        <div class="content">
+            <h2>Predice Casos Covid</h2>
+        </div>
+    </div>
+    <div class="body">
+        <div class="content" [formGroup]="predictForm">
+            <p>Solo complete los campos requeridos para poder generar una predicción de casos covid, acorde a fecha y región</p>
+            <div class="input">
+                <span>Región</span>
+                <select [(ngModel)]="selectRegion" name="" [ngModelOptions]="{standalone: true}">
+                    <option *ngFor="let region of listRegion" [value]="region.value">{{region.name}}</option>
+                </select>
+            </div>
+            <div class="input">
+                <span>Fecha</span>
+                <input type="date" name="" formControlName="dateAt"> 
+            </div>
+            <div class="input" *ngIf="viewPredict">
+                <span>Casos Covid</span>
+                <h3>{{viewPredict?.nCases}}</h3>
+            </div>
+            <div class="button">
+                <input type="submit" value="Predicir" name="" (click)="predictCovid()">
+                <input type="submit" class="distance" value="Guardar" name="" (click)="addPredict()">
+            </div>
+        </div>
+    </div>
+</section>

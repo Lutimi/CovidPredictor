@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  apiURL: 'http://localhost:900'
+  apiPredict: 'http://localhost:9001/',
+  apiMicroservices: 'http://localhost:9000/'
 };
 
 /*

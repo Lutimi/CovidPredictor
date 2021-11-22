@@ -12,20 +12,20 @@ export class CovidPredictorService {
   constructor(private http: HttpClient) { }
 
   // Use Algorithm
-  predictCovidCase(region: string, date: string): Observable<CovidPrediction> {
+  predictCovidCase(region: string, date: String): Observable<CovidPrediction> {
     let params = new HttpParams();
     params = params.set('region', region)
-    params = params.set('date', date)
-    return this.http.get<CovidPrediction>(environment.apiURL + '1/make-prediction', {params});
+    params = params.set('date', String(date))
+    return this.http.get<CovidPrediction>(environment.apiPredict + 'make-prediction', {params});
   }
 
   // List All Predictions
   listPredictions(): Observable<CovidPrediction[]> {
-    return this.http.get<CovidPrediction[]>(environment.apiURL + '0/list-predictions');
+    return this.http.get<CovidPrediction[]>(environment.apiMicroservices + 'list-predictions');
   }
 
   // Save Prediction
-  savePrediction(body: CovidPrediction): Observable<CovidPrediction>{
-    return this.http.post<CovidPrediction>(environment.apiURL + '0/save-prediction', body);
+  savePrediction(body: CovidPrediction | undefined): Observable<CovidPrediction>{
+    return this.http.post<CovidPrediction>(environment.apiMicroservices + 'save-prediction', body);
   }
 }

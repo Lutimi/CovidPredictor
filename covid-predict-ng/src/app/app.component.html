@@ -21,7 +21,7 @@
      <div class="table">
        <div class="prediction">
            <h2>Genera una predición: </h2>
-           <input type="submit" value="Generar" name="">
+           <input type="submit" value="Generar" name="" (click)="generatePrediction()">
        </div>
        <div class="dataset">
         <table mat-table [dataSource]="covidPredicts" class="style">
